@@ -61,6 +61,30 @@ if __name__ == '__main__':
     """
     print dataframe A,B,HR
     """
-    print(dfA_list)
-    print(dfB_list)
-    print(dfHR_list)
+    # print(dfA_list)
+    # print(dfB_list)
+    # print(dfHR_list)
+
+    """
+    join dataframes A,B
+    """
+    dfAB = pd.concat([dfA, dfB])
+    # dfAB = pd.merge(dfA, dfB, how='inner', on='employee_office_id')
+    # print(dfAB.shape,dfAB.index.name, [*dfAB.columns], sep=',\t')
+
+    """
+    merge dataframes AB with HR on their indexes
+    """
+    dfAB_HR = dfAB.merge(dfHR, how='inner', left_index=True, right_index=True,
+                         indicator=True)  # merges only rows that are in both AB and HR
+    dfABhr = dfAB_HR.drop(columns=['_merge'])  # removes column created by 'indicator' attribute in merge()
+    dfABhr = dfABhr.sort_index()
+    # dfABhr = dfABhr.sort_index(
+    #     key=lambda idx: pd.MultiIndex.from_arrays([
+    #         idx.str[0],  # alphabetical part
+    #         idx.str[1:].astype(int)  # numeric part
+    #     ])
+    # )
+
+    print(list(dfABhr.index))
+    print(list(dfABhr.columns))
