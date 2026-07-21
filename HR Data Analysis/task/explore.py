@@ -86,5 +86,24 @@ if __name__ == '__main__':
     #     ])
     # )
 
-    print(list(dfABhr.index))
-    print(list(dfABhr.columns))
+    # print(list(dfABhr.index))
+    # print(list(dfABhr.columns))
+
+    """
+    sort by column and pick top ten
+    """
+    dfSelection = dfABhr.sort_values(['average_monthly_hours'], ascending=False)['Department'][0:10]
+    departments = list(dfSelection)
+    print(departments)
+
+    """
+    Filter database and aggregate, sum(), from one selected column
+    """
+    result = dfABhr.query("Department == 'IT' & salary == 'low'").number_project.agg('sum')
+    print(result)
+
+    """
+    Find certain rows and select values from selected columns
+    """
+    df_rows = dfABhr.loc[['A4', 'B7064', 'A3033'], ['last_evaluation', 'satisfaction_level']].values.tolist()
+    print(df_rows)
