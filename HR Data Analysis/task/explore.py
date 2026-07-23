@@ -94,16 +94,32 @@ if __name__ == '__main__':
     """
     dfSelection = dfABhr.sort_values(['average_monthly_hours'], ascending=False)['Department'][0:10]
     departments = list(dfSelection)
-    print(departments)
+    # print(departments)
 
     """
     Filter database and aggregate, sum(), from one selected column
     """
     result = dfABhr.query("Department == 'IT' & salary == 'low'").number_project.agg('sum')
-    print(result)
+    # print(result)
 
     """
     Find certain rows and select values from selected columns
     """
     df_rows = dfABhr.loc[['A4', 'B7064', 'A3033'], ['last_evaluation', 'satisfaction_level']].values.tolist()
-    print(df_rows)
+    # print(df_rows)
+
+
+    def count_bigger_5(series):
+        return (series > 5).sum()
+
+
+    metrics = dfAB_HR.groupby('left').agg({
+        'number_project': ['median', count_bigger_5],
+        'time_spend_company': ['mean', 'median'],
+        'Work_accident': 'mean',
+        'last_evaluation': ['mean', 'std']
+    })
+
+    metrics = metrics.round(2)
+
+    print(metrics.to_dict())
